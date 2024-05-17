@@ -1,4 +1,7 @@
 streamlit
 requests
 pillow
+pandas
+xlsxwriter
+openai
 pytest
