@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.INFO)
 st.title('AltText.ai Integration with Streamlit')
 
 # Your AltText.ai API key
-API_KEY = "YOUR_API_KEY"  # Replace with your actual API key
+API_KEY = "040e8a7530f9dd1d75b4ad1e51b96801"  # Replace with your actual API key
 
 # File uploader for multiple images
 uploaded_files = st.file_uploader("Choose images...", type=["jpg", "png", "jpeg", "gif", "webp"], accept_multiple_files=True)
