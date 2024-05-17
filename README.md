@@ -1,1 +1,1 @@
-# alt-text-ai-app
+# AI Alt Text Generator
