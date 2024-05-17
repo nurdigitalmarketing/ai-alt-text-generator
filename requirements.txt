@@ -3,5 +3,5 @@ requests
 pillow
 pandas
 xlsxwriter
-openai
+openai==0.28
 pytest
