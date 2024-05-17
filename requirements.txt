@@ -1,7 +1,4 @@
 streamlit
 requests
 pillow
-pandas
-xlsxwriter
-openai==0.28
 pytest
