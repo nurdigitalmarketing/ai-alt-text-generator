@@ -112,12 +112,13 @@ def generate_alt_text_openai(image_file, api_key, language):
     """Call the OpenAI API to generate alt text for the given image."""
     openai.api_key = api_key
     
-    # Convert image to base64
+    # Read image file and ensure format is JPEG
     img = Image.open(image_file)
     buffered = io.BytesIO()
-    img.save(buffered, format=img.format)
+    img.save(buffered, format="JPEG")
     img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
     
+    # Create the prompt for the API
     prompt = f"Generate an alt text for the following image in {language}: {img_str}"
     
     response = openai.Completion.create(
@@ -125,9 +126,6 @@ def generate_alt_text_openai(image_file, api_key, language):
         prompt=prompt,
         max_tokens=50
     )
-    
-    logging.info(f"Request to OpenAI API: {prompt}")
-    logging.info(f"Response from OpenAI API: {response.choices[0].text.strip()}")
     
     return response
 
