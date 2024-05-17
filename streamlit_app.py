@@ -58,7 +58,7 @@ st.markdown('---')
 logging.basicConfig(level=logging.INFO)
 
 # API key input
-API_KEY = st.text_input("Enter your [AltText.ai](https://alttext.ai/account/api_keys) API key:", type="password")
+API_KEY = st.text_input("Inserisci la tua chiave API da [AltText.ai](https://alttext.ai/account/api_keys):", type="password")
 
 # Language selector
 languages = {
@@ -68,10 +68,10 @@ languages = {
     "German": "de",
     "Italian": "it"
 }
-selected_language = st.selectbox("Select language for alt text:", list(languages.keys()))
+selected_language = st.selectbox("Selezionare la lingua per l'alt text:", list(languages.keys()))
 
 # File uploader for multiple images
-uploaded_files = st.file_uploader("Choose images...", type=["jpg", "png", "jpeg", "gif", "webp"], accept_multiple_files=True)
+uploaded_files = st.file_uploader("Scegli immagini...", type=["jpg", "png", "jpeg", "gif", "webp"], accept_multiple_files=True)
 
 def generate_alt_text(image_file, api_key, language):
     """Call the AltText.ai API to generate alt text for the given image."""
