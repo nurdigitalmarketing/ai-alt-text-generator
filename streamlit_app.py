@@ -58,7 +58,7 @@ st.markdown('---')
 logging.basicConfig(level=logging.INFO)
 
 # API key input
-API_KEY = st.text_input("Enter your AltText.ai API key:", type="password")
+API_KEY = st.text_input("Enter your [AltText.ai](https://alttext.ai/account/api_keys) API key:", type="password")
 
 # Language selector
 languages = {
