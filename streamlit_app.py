@@ -17,7 +17,7 @@ with col1:
 
 # Colonna per il titolo e il testo "by NUR® Digital Marketing" (al centro)
 with col2:
-    st.title('Alt Text AI App')
+    st.title('AI Alt Text Generator')
     st.markdown('###### by [NUR® Digital Marketing](https://www.nur.it)')
 
 st.markdown("""
