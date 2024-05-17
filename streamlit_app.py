@@ -125,14 +125,14 @@ def generate_alt_text_openai(image_file, api_key, language):
     
     prompt = f"Generate alt text for this image in {language}: {img_str}"
     
-    response = openai.Completion.create(
-        engine="text-davinci-003",
+    response = openai.Image.create(
         prompt=prompt,
-        max_tokens=50
+        n=1,
+        size="512x512"
     )
     
     logging.info(f"Request to OpenAI API: {prompt}")
-    logging.info(f"Response from OpenAI API: {response.choices[0].text.strip()}")
+    logging.info(f"Response from OpenAI API: {response.data[0].url}")
     
     return response
 
@@ -157,7 +157,7 @@ if API_KEY and uploaded_files:
                 st.write(f"Error details: {errors}")
         elif selected_api == "OpenAI":
             alt_text_response = generate_alt_text_openai(uploaded_file, API_KEY, languages[selected_language])
-            alt_text = alt_text_response.choices[0].text.strip()
+            alt_text = alt_text_response.data[0].url
             html_code = f'<img src="{uploaded_file.name}" alt="{alt_text}">'
             results.append([uploaded_file.name, alt_text, html_code])
 
