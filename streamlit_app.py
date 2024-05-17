@@ -57,9 +57,6 @@ st.markdown('---')
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 
-# Title of the Streamlit app
-st.title('AltText.ai Integration with Streamlit')
-
 # API key input
 API_KEY = st.text_input("Enter your AltText.ai API key:", type="password")
 
