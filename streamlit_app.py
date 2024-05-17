@@ -6,6 +6,7 @@ import base64
 from PIL import Image
 import io
 import logging
+import pandas as pd
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -57,6 +58,9 @@ def generate_alt_text(image_file, api_key, language):
     
     return response
 
+# Prepare data for DataFrame
+results = []
+
 if API_KEY and uploaded_files:
     st.write(f"Generating alt text in {selected_language}...")
     for uploaded_file in uploaded_files:
@@ -66,14 +70,26 @@ if API_KEY and uploaded_files:
         if alt_text_response.status_code == 200:
             response_json = alt_text_response.json()
             alt_text = response_json.get('alt_text', 'No alt text generated')
-            metadata = response_json.get('metadata', {})
-            st.write(f"Generated Alt Text for {uploaded_file.name}: {alt_text}")
-            st.write(f"Metadata: {metadata}")
+            html_code = f'<img src="{uploaded_file.name}" alt="{alt_text}">'
+            results.append([uploaded_file.name, alt_text, html_code])
         else:
             error_details = alt_text_response.json()
             error_code = error_details.get('error_code', 'Unknown error code')
             errors = error_details.get('errors', 'No error details available')
             st.write(f"Error in generating alt text for {uploaded_file.name}: {error_code}")
             st.write(f"Error details: {errors}")
+
+# Display results in a table
+if results:
+    df = pd.DataFrame(results, columns=["Image Name", "Alt Text", "HTML Code"])
+    st.write(df)
+
+    # Export to Excel
+    if st.button("Export to Excel"):
+        output = io.BytesIO()
+        with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+            df.to_excel(writer, index=False, sheet_name='AltText')
+            writer.save()
+        st.download_button(label="Download Excel file", data=output.getvalue(), file_name="alt_text_results.xlsx", mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
 
 # To run this Streamlit app, save this code in a file named `app.py` and run `streamlit run app.py` in your terminal.
