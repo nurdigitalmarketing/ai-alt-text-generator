@@ -13,12 +13,12 @@ col1, col2 = st.columns([1, 7])
 
 # Colonna per l'immagine (a sinistra)
 with col1:
-    st.image("https://raw.githubusercontent.com/your-repository/your-image-path/logo.png", width=80)
+    st.image("https://raw.githubusercontent.com/nurdigitalmarketing/previsione-del-traffico-futuro/9cdbf5d19d9132129474936c137bc8de1a67bd35/Nur-simbolo-1080x1080.png", width=80)
 
 # Colonna per il titolo e il testo "by NUR® Digital Marketing" (al centro)
 with col2:
     st.title('Integrazione AltText.ai con Streamlit')
-    st.markdown('###### by [Your Company](https://www.yourwebsite.com)')
+    st.markdown('###### by [NUR® Digital Marketing](https://www.nur.it)')
 
 st.markdown("""
 
