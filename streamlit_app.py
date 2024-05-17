@@ -20,29 +20,7 @@ with col2:
     st.title('Integrazione AltText.ai con Streamlit')
     st.markdown('###### by [Your Company](https://www.yourwebsite.com)')
 
-st.markdown("""
-## Introduzione
-
-Questo strumento è stato sviluppato per generare automaticamente testo alternativo per le immagini utilizzando l'API di AltText.ai. Il testo alternativo è fondamentale per migliorare l'accessibilità del sito web e ottimizzare la SEO delle pagine web.
-
-## Funzionamento
-
-L'applicazione consente di caricare più immagini, selezionare la lingua del testo alternativo e generare il codice HTML con il testo alternativo. I risultati possono essere esportati in un file Excel per un facile utilizzo.
-
-### Caratteristiche
-
-- **Caricamento Immagini:** Carica più immagini contemporaneamente.
-- **Selettore Lingua:** Seleziona la lingua per il testo alternativo.
-- **Generazione Alt Text:** Genera automaticamente il testo alternativo utilizzando l'API di AltText.ai.
-- **Esportazione in Excel:** Esporta i risultati in un file Excel per un facile utilizzo.
-
-## Istruzioni
-
-Segui i passaggi seguenti per utilizzare l'applicazione.
-
-""")
-
-with st.expander("Istruzioni Dettagliate"):
+with st.expander("Istruzioni"):
     st.markdown("""
     1. **Inserisci la tua API Key:**
        - Nella casella di testo, inserisci la tua API key di AltText.ai. La tua API key è necessaria per autenticare le richieste all'API.
