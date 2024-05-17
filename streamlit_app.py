@@ -1,3 +1,5 @@
+# streamlit_app.py
+
 import streamlit as st
 import requests
 import base64
@@ -11,17 +13,27 @@ logging.basicConfig(level=logging.INFO)
 # Title of the Streamlit app
 st.title('AltText.ai Integration with Streamlit')
 
-# Your AltText.ai API key
-API_KEY = "040e8a7530f9dd1d75b4ad1e51b96801"  # Replace with your actual API key
+# API key input
+API_KEY = st.text_input("Enter your AltText.ai API key:", type="password")
+
+# Language selector
+languages = {
+    "English": "en",
+    "Spanish": "es",
+    "French": "fr",
+    "German": "de",
+    "Italian": "it"
+}
+selected_language = st.selectbox("Select language for alt text:", list(languages.keys()))
 
 # File uploader for multiple images
 uploaded_files = st.file_uploader("Choose images...", type=["jpg", "png", "jpeg", "gif", "webp"], accept_multiple_files=True)
 
-def generate_alt_text(image_file):
+def generate_alt_text(image_file, api_key, language):
     """Call the AltText.ai API to generate alt text for the given image."""
     url = "https://alttext.ai/api/v1/images"
     headers = {
-        "X-API-Key": API_KEY,
+        "X-API-Key": api_key,
         "Content-Type": "application/json"
     }
     
@@ -34,7 +46,8 @@ def generate_alt_text(image_file):
     data = {
         "image": {
             "raw": img_str
-        }
+        },
+        "lang": language
     }
     
     response = requests.post(url, json=data, headers=headers)
@@ -44,14 +57,18 @@ def generate_alt_text(image_file):
     
     return response
 
-if uploaded_files:
+if API_KEY and uploaded_files:
+    st.write(f"Generating alt text in {selected_language}...")
     for uploaded_file in uploaded_files:
         # Generate alt text for each uploaded image
-        alt_text_response = generate_alt_text(uploaded_file)
+        alt_text_response = generate_alt_text(uploaded_file, API_KEY, languages[selected_language])
         
         if alt_text_response.status_code == 200:
-            alt_text = alt_text_response.json().get('alt_text', 'No alt text generated')
+            response_json = alt_text_response.json()
+            alt_text = response_json.get('alt_text', 'No alt text generated')
+            metadata = response_json.get('metadata', {})
             st.write(f"Generated Alt Text for {uploaded_file.name}: {alt_text}")
+            st.write(f"Metadata: {metadata}")
         else:
             error_details = alt_text_response.json()
             error_code = error_details.get('error_code', 'Unknown error code')
