@@ -24,20 +24,13 @@ st.markdown("""
 
 ## Introduzione
 
-L'applicazione consente di caricare più immagini, selezionare la lingua del testo alternativo e generare il codice HTML con il testo alternativo. I risultati possono essere esportati in un file Excel per un facile utilizzo.
-
-### Caratteristiche
-
-- **Caricamento immagini:** Carica più immagini contemporaneamente.
-- **Selettore lingua:** Seleziona la lingua per il testo alternativo.
-- **Generazione Alt Text:** Genera automaticamente il testo alternativo utilizzando l'API di AltText.ai.
-- **Esportazione in Excel:** Esporta i risultati in un file Excel per un facile utilizzo.
+L'applicazione consente di caricare più immagini, selezionare la lingua del testo alternativo e generare il codice HTML con il testo alternativo. I risultati possono essere esportati in un file Excel.
     """)
 
 with st.expander("Istruzioni"):
     st.markdown("""
     1. **Inserisci la tua API Key:**
-       - Nella casella di testo, inserisci la tua API key di AltText.ai. La tua API key è necessaria per autenticare le richieste all'API.
+       - Nella casella di testo, inserisci la tua [API key di AltText.ai](https://alttext.ai/account/api_keys).
 
     2. **Seleziona la Lingua:**
        - Utilizza il selettore a tendina per scegliere la lingua in cui desideri generare il testo alternativo.
