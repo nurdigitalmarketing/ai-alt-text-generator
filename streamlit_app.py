@@ -8,6 +8,60 @@ import io
 import logging
 import pandas as pd
 
+# Crea una riga con 3 colonne
+col1, col2 = st.columns([1, 7])
+
+# Colonna per l'immagine (a sinistra)
+with col1:
+    st.image("https://raw.githubusercontent.com/your-repository/your-image-path/logo.png", width=80)
+
+# Colonna per il titolo e il testo "by NUR® Digital Marketing" (al centro)
+with col2:
+    st.title('Integrazione AltText.ai con Streamlit')
+    st.markdown('###### by [Your Company](https://www.yourwebsite.com)')
+
+st.markdown("""
+## Introduzione
+
+Questo strumento è stato sviluppato per generare automaticamente testo alternativo per le immagini utilizzando l'API di AltText.ai. Il testo alternativo è fondamentale per migliorare l'accessibilità del sito web e ottimizzare la SEO delle pagine web.
+
+## Funzionamento
+
+L'applicazione consente di caricare più immagini, selezionare la lingua del testo alternativo e generare il codice HTML con il testo alternativo. I risultati possono essere esportati in un file Excel per un facile utilizzo.
+
+### Caratteristiche
+
+- **Caricamento Immagini:** Carica più immagini contemporaneamente.
+- **Selettore Lingua:** Seleziona la lingua per il testo alternativo.
+- **Generazione Alt Text:** Genera automaticamente il testo alternativo utilizzando l'API di AltText.ai.
+- **Esportazione in Excel:** Esporta i risultati in un file Excel per un facile utilizzo.
+
+## Istruzioni
+
+Segui i passaggi seguenti per utilizzare l'applicazione.
+
+""")
+
+with st.expander("Istruzioni Dettagliate"):
+    st.markdown("""
+    1. **Inserisci la tua API Key:**
+       - Nella casella di testo, inserisci la tua API key di AltText.ai. La tua API key è necessaria per autenticare le richieste all'API.
+
+    2. **Seleziona la Lingua:**
+       - Utilizza il selettore a tendina per scegliere la lingua in cui desideri generare il testo alternativo.
+
+    3. **Carica le Immagini:**
+       - Usa il pulsante di caricamento per selezionare e caricare le immagini dal tuo dispositivo.
+
+    4. **Genera Alt Text:**
+       - Una volta caricate le immagini, l'applicazione genererà automaticamente il testo alternativo per ciascuna immagine.
+
+    5. **Esporta in Excel:**
+       - Dopo la generazione del testo alternativo, puoi esportare i risultati in un file Excel cliccando sul pulsante di esportazione.
+    """)
+
+st.markdown('---')
+
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 
