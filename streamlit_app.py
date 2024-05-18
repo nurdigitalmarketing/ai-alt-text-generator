@@ -100,7 +100,7 @@ def generate_alt_text_alttextai(image_file, api_key, language):
     return response
 
 def generate_alt_text_openai(image_file, api_key, language):
-    """Call the OpenAI API to generate alt text for the given image."""
+    """Use OpenAI API to generate a description for the given image."""
     openai.api_key = api_key
     
     img = Image.open(image_file)
@@ -108,16 +108,18 @@ def generate_alt_text_openai(image_file, api_key, language):
     img.save(buffered, format="PNG")
     img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
     
-    prompt = f"Generate an alt text for the following image in {language} language:"
+    prompt = f"Generate a detailed alt text for the following image in {language}: {img_str}"
     
-    response = openai.Image.create(
-        prompt=prompt,
-        image=img_str,
-        n=1,
-        size="256x256"
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": prompt}
+        ],
+        max_tokens=50
     )
     
-    alt_text = response['data'][0]['text']
+    alt_text = response.choices[0].message['content'].strip()
     logging.info(f"Response from OpenAI API: {response}")
     
     return alt_text
@@ -128,7 +130,6 @@ results = []
 if (ALT_TEXT_API_KEY or OPENAI_API_KEY) and uploaded_files:
     st.write(f"Generating alt text in {selected_language} using {selected_api} API...")
     for uploaded_file in uploaded_files:
-        # Generate alt text for each uploaded image
         if selected_api == "AltText.ai":
             alt_text_response = generate_alt_text_alttextai(uploaded_file, ALT_TEXT_API_KEY, languages[selected_language])
             if alt_text_response.status_code == 200:
@@ -152,7 +153,6 @@ if results:
     df = pd.DataFrame(results, columns=["Image Name", "Alt Text", "HTML Code"])
     st.write(df)
 
-    # Export to Excel
     if st.button("Export to Excel"):
         output = io.BytesIO()
         with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
