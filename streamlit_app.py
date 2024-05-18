@@ -1,5 +1,6 @@
 import streamlit as st
 import requests
+import openai
 import base64
 from PIL import Image
 import io
@@ -48,8 +49,10 @@ st.markdown('---')
 # Set up logging
 logging.basicConfig(level=logging.INFO)
 
-# API key input
-API_KEY = st.text_input("Inserisci la tua chiave API da [AltText.ai](https://alttext.ai/account/api_keys):", type="password")
+# API key input for AltText.ai
+ALT_TEXT_API_KEY = st.text_input("Inserisci la tua chiave API da [AltText.ai](https://alttext.ai/account/api_keys):", type="password")
+# API key input for OpenAI
+OPENAI_API_KEY = st.text_input("Inserisci la tua chiave API di OpenAI:", type="password")
 
 # Language selector
 languages = {
@@ -64,7 +67,11 @@ selected_language = st.selectbox("Selezionare la lingua per l'alt text:", list(l
 # File uploader for multiple images
 uploaded_files = st.file_uploader("Scegli immagini...", type=["jpg", "png", "jpeg", "gif", "webp"], accept_multiple_files=True)
 
-def generate_alt_text(image_file, api_key, language):
+# API selection
+api_options = ["AltText.ai", "OpenAI"]
+selected_api = st.selectbox("Seleziona l'API per generare l'alt text:", api_options)
+
+def generate_alt_text_alttextai(image_file, api_key, language):
     """Call the AltText.ai API to generate alt text for the given image."""
     url = "https://alttext.ai/api/v1/images"
     headers = {
@@ -92,26 +99,53 @@ def generate_alt_text(image_file, api_key, language):
     
     return response
 
+def generate_alt_text_openai(image_file, api_key, language):
+    """Call the OpenAI API to generate alt text for the given image."""
+    openai.api_key = api_key
+    
+    img = Image.open(image_file)
+    buffered = io.BytesIO()
+    img.save(buffered, format="PNG")
+    img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
+    
+    prompt = f"Generate an alt text for the following image in {language} language:"
+    
+    response = openai.Image.create(
+        prompt=prompt,
+        image=img_str,
+        n=1,
+        size="256x256"
+    )
+    
+    alt_text = response['data'][0]['text']
+    logging.info(f"Response from OpenAI API: {response}")
+    
+    return alt_text
+
 # Prepare data for DataFrame
 results = []
 
-if API_KEY and uploaded_files:
-    st.write(f"Generating alt text in {selected_language}...")
+if (ALT_TEXT_API_KEY or OPENAI_API_KEY) and uploaded_files:
+    st.write(f"Generating alt text in {selected_language} using {selected_api} API...")
     for uploaded_file in uploaded_files:
         # Generate alt text for each uploaded image
-        alt_text_response = generate_alt_text(uploaded_file, API_KEY, languages[selected_language])
-        
-        if alt_text_response.status_code == 200:
-            response_json = alt_text_response.json()
-            alt_text = response_json.get('alt_text', 'No alt text generated')
+        if selected_api == "AltText.ai":
+            alt_text_response = generate_alt_text_alttextai(uploaded_file, ALT_TEXT_API_KEY, languages[selected_language])
+            if alt_text_response.status_code == 200:
+                response_json = alt_text_response.json()
+                alt_text = response_json.get('alt_text', 'No alt text generated')
+                html_code = f'<img src="{uploaded_file.name}" alt="{alt_text}">'
+                results.append([uploaded_file.name, alt_text, html_code])
+            else:
+                error_details = alt_text_response.json()
+                error_code = error_details.get('error_code', 'Unknown error code')
+                errors = error_details.get('errors', 'No error details available')
+                st.write(f"Error in generating alt text for {uploaded_file.name}: {error_code}")
+                st.write(f"Error details: {errors}")
+        elif selected_api == "OpenAI":
+            alt_text = generate_alt_text_openai(uploaded_file, OPENAI_API_KEY, selected_language)
             html_code = f'<img src="{uploaded_file.name}" alt="{alt_text}">'
             results.append([uploaded_file.name, alt_text, html_code])
-        else:
-            error_details = alt_text_response.json()
-            error_code = error_details.get('error_code', 'Unknown error code')
-            errors = error_details.get('errors', 'No error details available')
-            st.write(f"Error in generating alt text for {uploaded_file.name}: {error_code}")
-            st.write(f"Error details: {errors}")
 
 # Display results in a table
 if results:
