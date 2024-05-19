@@ -1,4 +1,5 @@
 import streamlit as st
+from streamlit_elements import Elements
 import requests
 import base64
 from PIL import Image
