@@ -7,6 +7,9 @@ import io
 import logging
 import pandas as pd
 
+# Setup logging
+logging.basicConfig(level=logging.INFO)
+
 # Crea una riga con 3 colonne
 col1, col2 = st.columns([1, 7])
 
@@ -46,9 +49,6 @@ with st.expander("Istruzioni"):
 
 st.markdown('---')
 
-# Set up logging
-logging.basicConfig(level=logging.INFO)
-
 # API key input for AltText.ai
 ALT_TEXT_API_KEY = st.text_input("Inserisci la tua chiave API da [AltText.ai](https://alttext.ai/account/api_keys):", type="password")
 # API key input for OpenAI
@@ -71,44 +71,14 @@ uploaded_files = st.file_uploader("Scegli immagini...", type=["jpg", "png", "jpe
 api_options = ["AltText.ai", "OpenAI"]
 selected_api = st.selectbox("Seleziona l'API per generare l'alt text:", api_options)
 
-def generate_alt_text_alttextai(image_file, api_key, language):
-    """Call the AltText.ai API to generate alt text for the given image."""
-    url = "https://alttext.ai/api/v1/images"
-    headers = {
-        "X-API-Key": api_key,
-        "Content-Type": "application/json"
-    }
-    
-    # Convert image to base64
-    img = Image.open(image_file)
-    buffered = io.BytesIO()
-    img.save(buffered, format=img.format)
-    img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
-    
-    data = {
-        "image": {
-            "raw": img_str
-        },
-        "lang": language
-    }
-    
-    response = requests.post(url, json=data, headers=headers)
-    
-    logging.info(f"Request to AltText.ai API: {response.request.body}")
-    logging.info(f"Response from AltText.ai API: {response.status_code}, {response.text}")
-    
-    return response
+def generate_clip_description(image):
+    # Placeholder function for CLIP model inference
+    return "breve descrizione dell'immagine"
 
-def generate_alt_text_openai(image_file, api_key, language):
-    """Use OpenAI API to generate a description for the given image."""
+def generate_alt_text_openai(description, api_key):
     client = openai.OpenAI(api_key=api_key)
     
-    img = Image.open(image_file)
-    buffered = io.BytesIO()
-    img.save(buffered, format="PNG")
-    img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
-    
-    prompt = f"Generate a detailed alt text for the image in {language}."
+    prompt = f"Generate a detailed alt text for the following image description: {description}"
 
     response = client.chat.completions.create(
         model="gpt-4",
@@ -116,7 +86,7 @@ def generate_alt_text_openai(image_file, api_key, language):
             {"role": "system", "content": "You are a helpful assistant."},
             {"role": "user", "content": prompt}
         ],
-        max_tokens=50
+        max_tokens=100
     )
     
     alt_text = response.choices[0].message.content.strip()
@@ -144,7 +114,9 @@ if (ALT_TEXT_API_KEY or OPENAI_API_KEY) and uploaded_files:
                 st.write(f"Error in generating alt text for {uploaded_file.name}: {error_code}")
                 st.write(f"Error details: {errors}")
         elif selected_api == "OpenAI":
-            alt_text = generate_alt_text_openai(uploaded_file, OPENAI_API_KEY, selected_language)
+            img = Image.open(uploaded_file)
+            clip_description = generate_clip_description(img)
+            alt_text = generate_alt_text_openai(clip_description, OPENAI_API_KEY)
             html_code = f'<img src="{uploaded_file.name}" alt="{alt_text}">'
             results.append([uploaded_file.name, alt_text, html_code])
 
