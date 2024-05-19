@@ -119,7 +119,7 @@ def generate_alt_text_openai(image_file, api_key, language):
         max_tokens=50
     )
     
-    alt_text = response.choices[0].message['content'].strip()
+    alt_text = response.choices[0].message.content.strip()
     logging.info(f"Response from OpenAI API: {response}")
     
     return alt_text
