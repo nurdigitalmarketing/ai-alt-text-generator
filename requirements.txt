@@ -2,3 +2,4 @@ streamlit
 requests
 pillow
 pytest
+streamlit-elements
