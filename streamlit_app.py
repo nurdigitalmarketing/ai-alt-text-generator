@@ -101,7 +101,7 @@ def generate_alt_text_alttextai(image_file, api_key, language):
 
 def generate_alt_text_openai(image_file, api_key, language):
     """Use OpenAI API to generate a description for the given image."""
-    openai.api_key = api_key
+    client = openai.OpenAI(api_key=api_key)
     
     img = Image.open(image_file)
     buffered = io.BytesIO()
@@ -109,8 +109,8 @@ def generate_alt_text_openai(image_file, api_key, language):
     img_str = base64.b64encode(buffered.getvalue()).decode("utf-8")
     
     prompt = f"Generate a detailed alt text for the image in {language}."
-    
-    response = openai.ChatCompletion.create(
+
+    response = client.chat.completions.create(
         model="gpt-4",
         messages=[
             {"role": "system", "content": "You are a helpful assistant."},
