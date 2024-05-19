@@ -1,13 +1,10 @@
 import streamlit as st
-from streamlit_elements import Elements
 import requests
 import base64
 from PIL import Image
 import io
 import logging
 import pandas as pd
-
-# Streamlit Elements
 from streamlit_elements import Elements
 
 # Set up page layout and configuration
@@ -153,3 +150,7 @@ with tab2:
     #### Contributori
     Questa app si basa sull'eccellente wrapper Python di Google Search Console di [Josh Carty](https://github.com/joshcarty/google-searchconsole). Un grande ringraziamento a lui per averlo creato!
     """)
+
+# Sponsored
+st.markdown("**Sponsored**")
+st.markdown("“ChatGPT for [Stock Market](https://api.adzedek.com/click_stockmarketgpt0314?chatbot_id=1715191360448x620213882279166000&operation_hash=c51df1e59998126f98fab8bc207c50cc) Investors")
